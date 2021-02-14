@@ -2,8 +2,12 @@ package com.golovkin.lesson25.consoleapp.crudcontrollers;
 
 import com.golovkin.lesson25.consoleapp.ConsoleHelper;
 import com.golovkin.lesson25.dao.Dao;
+import com.golovkin.lesson25.model.Author;
 import com.golovkin.lesson25.model.Book;
+import com.golovkin.lesson25.model.Genre;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class BookCrudController extends AbstractCrudController<Book> {
@@ -24,7 +28,7 @@ public class BookCrudController extends AbstractCrudController<Book> {
     }
 
     public Book requestBook() {
-        var books = getDao().findAll();
+        List<Book> books = getDao().findAll();
 
         System.out.println("Available books: ");
 
@@ -34,7 +38,7 @@ public class BookCrudController extends AbstractCrudController<Book> {
             printEntities(books);
         }
 
-        var chosenIndex = ConsoleHelper.requestInput("Enter book index: ", x -> x >= 0 && x < books.size());
+        int chosenIndex = ConsoleHelper.requestInput("Enter book index: ", x -> x >= 0 && x < books.size());
 
         return books.get(chosenIndex);
     }
@@ -45,35 +49,35 @@ public class BookCrudController extends AbstractCrudController<Book> {
 
     @Override
     public void handleCreate() {
-        var name = requestName();
-        var pageCount = requestPageCount();
-        var genre = genreCrudController.requestGenre();
-        var author = authorCrudController.requestAuthor();
+        String name = requestName();
+        int pageCount = requestPageCount();
+        Genre genre = genreCrudController.requestGenre();
+        Author author = authorCrudController.requestAuthor();
 
-        var book = new Book(name, genre, author, pageCount);
+        Book book = new Book(name, genre, author, pageCount);
         getDao().create(book);
     }
 
     @Override
     public void handleUpdate() {
-        var updateableBook = requestBook();
-        var updateableField = requestEntityUpdateableField();
+        Book updateableBook = requestBook();
+        String updateableField = requestEntityUpdateableField();
 
         switch (updateableField) {
             case "Name":
-                var name = requestName();
+                String name = requestName();
                 updateableBook.setName(name);
                 break;
             case "Author":
-                var author = authorCrudController.requestAuthor();
+                Author author = authorCrudController.requestAuthor();
                 updateableBook.setAuthor(author);
                 break;
             case "Genre":
-                var genre = genreCrudController.requestGenre();
+                Genre genre = genreCrudController.requestGenre();
                 updateableBook.setGenre(genre);
                 break;
             case "Page count":
-                var pageCount = requestPageCount();
+                int pageCount = requestPageCount();
                 updateableBook.setPageCount(pageCount);
                 break;
         }

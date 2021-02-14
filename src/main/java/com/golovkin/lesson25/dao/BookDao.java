@@ -10,9 +10,15 @@ import org.springframework.stereotype.Component;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Optional;
 
 @Component
 public class BookDao extends AbstractDao<Book> {
+    private static final String FIND_ALL_QUERY = "SELECT id, name, authorId, genreId, pageCount FROM Book;";
+    private static final String INSERT_QUERY = "INSERT INTO Book(name, authorId, genreId, pageCount) VALUES(?, ?, ?, ?);";
+    private static final String UPDATE_QUERY = "UPDATE Book SET name = ?, authorId = ?, genreId = ?, pageCount = ? WHERE id = ?;";
+    private static final String FIND_BY_ID_QUERY = "SELECT id, name, authorId, genreId, pageCount FROM Book WHERE id = ?;";
+    private static final String DELETE_QUERY = "DELETE FROM Book WHERE id = ?;";
     private Dao<Author> authorDao;
     private Dao<Genre> genreDao;
 
@@ -25,13 +31,13 @@ public class BookDao extends AbstractDao<Book> {
     @Override
     protected RowMapper<Book> getRowMapper() {
         return (rs, rowNum) -> {
-            var book = new Book();
+            Book book = new Book();
             book.setName(rs.getString("name"));
 
-            var author = authorDao.get(rs.getLong("authorId"));
+            Optional<Author> author = authorDao.get(rs.getLong("authorId"));
             book.setAuthor(author.orElse(null));
 
-            var genre = genreDao.get(rs.getLong("genreId"));
+            Optional<Genre> genre = genreDao.get(rs.getLong("genreId"));
             book.setGenre(genre.orElse(null));
 
             book.setPageCount(rs.getInt("pageCount"));
@@ -43,18 +49,18 @@ public class BookDao extends AbstractDao<Book> {
 
     @Override
     protected String getFindAllSqlQuery() {
-        return "SELECT id, name, authorId, genreId, pageCount FROM Book;";
+        return FIND_ALL_QUERY;
     }
 
     @Override
     protected PreparedStatement getCreatePreparedStatement(Book book, Connection connection) throws SQLException {
-        var genre = book.getGenre();
+        Genre genre = book.getGenre();
         createGenreIfNotExist(genre);
 
-        var author = book.getAuthor();
+        Author author = book.getAuthor();
         createAuthorIfNotExist(author);
 
-        var sql = "INSERT INTO Book(name, authorId, genreId, pageCount) VALUES(?, ?, ?, ?);";
+        String sql = INSERT_QUERY;
 
         PreparedStatement preparedStatement = connection
                 .prepareStatement(sql, new String[]{"id"});
@@ -80,7 +86,7 @@ public class BookDao extends AbstractDao<Book> {
 
     @Override
     protected PreparedStatement getUpdatePreparedStatement(Book book, Connection connection) throws SQLException {
-        var sql = "UPDATE Book SET name = ?, authorId = ?, genreId = ?, pageCount = ? WHERE id = ?;";
+        String sql = UPDATE_QUERY;
 
         Author author = book.getAuthor();
         createAuthorIfNotExist(author);
@@ -100,11 +106,11 @@ public class BookDao extends AbstractDao<Book> {
 
     @Override
     protected String getFindByIdSqlQuery() {
-        return "SELECT id, name, authorId, genreId, pageCount FROM Book WHERE id = ?;";
+        return FIND_BY_ID_QUERY;
     }
 
     @Override
     protected String getDeleteByIdSqlQuery() {
-        return "DELETE FROM Book WHERE id = ?;";
+        return DELETE_QUERY;
     }
 }

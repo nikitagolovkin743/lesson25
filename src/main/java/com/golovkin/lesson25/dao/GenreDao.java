@@ -11,6 +11,13 @@ import java.sql.SQLException;
 
 @Component
 public class GenreDao extends AbstractDao<Genre> {
+
+    private static final String FIND_ALL_QUERY = "SELECT id, name FROM Genre;";
+    private static final String INSERT_QUERY = "INSERT INTO Genre(name) VALUES(?);";
+    private static final String UPDATE_QUERY = "UPDATE Genre SET name = ? WHERE id = ?;";
+    private static final String FIND_BY_ID_QUERY = "SELECT id, name FROM Genre WHERE id = ?;";
+    private static final String DELETE_QUERY = "DELETE FROM Genre WHERE id = ?;";
+
     public GenreDao(JdbcTemplate jdbcTemplate) {
         super(jdbcTemplate);
     }
@@ -18,7 +25,7 @@ public class GenreDao extends AbstractDao<Genre> {
     @Override
     protected RowMapper<Genre> getRowMapper() {
         return (rs, rowNum) -> {
-            var genre = new Genre(rs.getString("name"));
+            Genre genre = new Genre(rs.getString("name"));
             genre.setId(rs.getLong("id"));
             return genre;
         };
@@ -26,12 +33,12 @@ public class GenreDao extends AbstractDao<Genre> {
 
     @Override
     protected String getFindAllSqlQuery() {
-        return "SELECT id, name FROM Genre;";
+        return FIND_ALL_QUERY;
     }
 
     @Override
     protected PreparedStatement getCreatePreparedStatement(Genre genre, Connection connection) throws SQLException {
-        var sql = "INSERT INTO Genre(name) VALUES(?);";
+        String sql = INSERT_QUERY;
 
         PreparedStatement preparedStatement = connection
                 .prepareStatement(sql, new String[]{"id"});
@@ -42,7 +49,7 @@ public class GenreDao extends AbstractDao<Genre> {
 
     @Override
     protected PreparedStatement getUpdatePreparedStatement(Genre genre, Connection connection) throws SQLException {
-        var sql = "UPDATE Genre SET name = ? WHERE id = ?;";
+        String sql = UPDATE_QUERY;
 
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setString(1, genre.getName());
@@ -53,11 +60,11 @@ public class GenreDao extends AbstractDao<Genre> {
 
     @Override
     protected String getFindByIdSqlQuery() {
-        return "SELECT id, name FROM Genre WHERE id = ?;";
+        return FIND_BY_ID_QUERY;
     }
 
     @Override
     protected String getDeleteByIdSqlQuery() {
-        return "DELETE FROM Genre WHERE id = ?;";
+        return DELETE_QUERY;
     }
 }

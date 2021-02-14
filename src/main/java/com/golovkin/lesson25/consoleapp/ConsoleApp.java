@@ -20,15 +20,15 @@ public class ConsoleApp {
 
     private void initializeCrudControllers(List<AbstractCrudController<? extends Identifiable>> crudControllerList) {
         this.crudControllers = new HashMap<>();
-        for (var crudController : crudControllerList) {
-            var clazz = (Class) ((ParameterizedType) crudController.getClass()
+        for (AbstractCrudController<? extends Identifiable> crudController : crudControllerList) {
+            Class clazz = (Class) ((ParameterizedType) crudController.getClass()
                     .getGenericSuperclass()).getActualTypeArguments()[0];
             crudControllers.put(clazz, crudController);
         }
     }
 
     public void run() {
-        var availableEntityTypes = getAvailableEntityTypes();
+        Class[] availableEntityTypes = getAvailableEntityTypes();
 
         while (true) {
             AbstractCrudController<? extends Identifiable> chosenCrudController = chooseEntityType(availableEntityTypes);
@@ -71,14 +71,14 @@ public class ConsoleApp {
     }
 
     private void printEntityTypes(Class[] entityTypes) {
-        for (var i = 0; i < entityTypes.length; i++) {
+        for (int i = 0; i < entityTypes.length; i++) {
             String entityName = entityTypes[i].getSimpleName();
             System.out.printf("%d. %s\n", i + 1, entityName);
         }
     }
 
     private CrudActions chooseCrudAction() {
-        var crudActions = CrudActions.values();
+        CrudActions[] crudActions = CrudActions.values();
         printCrudActions(crudActions);
 
         int chosenIndex = ConsoleHelper.requestInput("Choose CRUD action: ", x -> x < crudActions.length && x >= 0);

@@ -5,6 +5,8 @@ import com.golovkin.lesson25.dao.Dao;
 import com.golovkin.lesson25.model.Author;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class AuthorCrudController extends AbstractCrudController<Author> {
     private static final String[] ENTITY_UPDATEABLE_FIELDS = new String[]{"First name", "Last name", "Phone"};
@@ -30,7 +32,7 @@ public class AuthorCrudController extends AbstractCrudController<Author> {
 
     public Author requestAuthor() {
         System.out.println("Available authors: ");
-        var authors = getDao().findAll();
+        List<Author> authors = getDao().findAll();
 
         if (authors.isEmpty()) {
             throw new IllegalStateException("There are no available entities");
@@ -38,37 +40,37 @@ public class AuthorCrudController extends AbstractCrudController<Author> {
             printEntities(authors);
         }
 
-        var authorIndex = ConsoleHelper.requestInput("Enter author index: ", x -> x >= 0 && x < authors.size());
+        int authorIndex = ConsoleHelper.requestInput("Enter author index: ", x -> x >= 0 && x < authors.size());
 
         return authors.get(authorIndex);
     }
 
     @Override
     public void handleCreate() {
-        var firstName = requestFirstName();
-        var lastName = requestLastName();
-        var phone = requestPhone();
+        String firstName = requestFirstName();
+        String lastName = requestLastName();
+        String phone = requestPhone();
 
-        var author = new Author(firstName, lastName, phone);
+        Author author = new Author(firstName, lastName, phone);
         getDao().create(author);
     }
 
     @Override
     public void handleUpdate() {
-        var updateableAuthor = requestAuthor();
-        var updateableField = requestEntityUpdateableField();
+        Author updateableAuthor = requestAuthor();
+        String updateableField = requestEntityUpdateableField();
 
         switch (updateableField) {
             case "First name":
-                var firstName = requestFirstName();
+                String firstName = requestFirstName();
                 updateableAuthor.setFirstName(firstName);
                 break;
             case "Last name":
-                var lastName = requestLastName();
+                String lastName = requestLastName();
                 updateableAuthor.setLastName(lastName);
                 break;
             case "Phone":
-                var phone = requestPhone();
+                String phone = requestPhone();
                 updateableAuthor.setPhone(phone);
                 break;
         }

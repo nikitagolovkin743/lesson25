@@ -5,6 +5,8 @@ import com.golovkin.lesson25.dao.Dao;
 import com.golovkin.lesson25.model.Genre;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class GenreCrudController extends AbstractCrudController<Genre> {
     private static final String[] ENTITY_UPDATEABLE_FIELDS = new String[]{"Name"};
@@ -20,7 +22,7 @@ public class GenreCrudController extends AbstractCrudController<Genre> {
 
     public Genre requestGenre() {
         System.out.println("Available genres: ");
-        var genres = getDao().findAll();
+        List<Genre> genres = getDao().findAll();
 
         if (genres.isEmpty()) {
             throw new IllegalStateException("There are no available entities");
@@ -28,27 +30,27 @@ public class GenreCrudController extends AbstractCrudController<Genre> {
             printEntities(genres);
         }
 
-        var genreIndex = ConsoleHelper.requestInput("Enter genre index: ", x -> x >= 0 && x < genres.size());
+        int genreIndex = ConsoleHelper.requestInput("Enter genre index: ", x -> x >= 0 && x < genres.size());
 
         return genres.get(genreIndex);
     }
 
     @Override
     public void handleCreate() {
-        var name = requestName();
+        String name = requestName();
 
-        var genre = new Genre(name);
+        Genre genre = new Genre(name);
 
         getDao().create(genre);
     }
 
     @Override
     public void handleUpdate() {
-        var updateableGenre = requestGenre();
-        var updateableField = requestEntityUpdateableField();
+        Genre updateableGenre = requestGenre();
+        String updateableField = requestEntityUpdateableField();
 
         if (updateableField.equals("Name")) {
-            var name = requestName();
+            String name = requestName();
             updateableGenre.setName(name);
         }
 

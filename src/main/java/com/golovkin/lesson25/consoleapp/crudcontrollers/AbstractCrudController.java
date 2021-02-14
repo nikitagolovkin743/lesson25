@@ -19,34 +19,34 @@ public abstract class AbstractCrudController<T extends Identifiable> {
     public abstract void handleCreate();
 
     public void handleRead() {
-        var entities = dao.findAll();
+        List<T> entities = dao.findAll();
         printEntities(entities);
     }
 
     public abstract void handleUpdate();
 
     public void handleDelete() {
-        var entities = dao.findAll();
+        List<T> entities = dao.findAll();
         printEntities(entities);
 
-        var chosenEntityToDeleteIndex = ConsoleHelper.requestInput("Choose entity to delete:", x -> x < entities.size() && x >= 0);
-        var chosenEntityToDelete = entities.get(chosenEntityToDeleteIndex);
+        int chosenEntityToDeleteIndex = ConsoleHelper.requestInput("Choose entity to delete:", x -> x < entities.size() && x >= 0);
+        T chosenEntityToDelete = entities.get(chosenEntityToDeleteIndex);
 
         dao.delete(chosenEntityToDelete.getId());
     }
 
     protected String requestEntityUpdateableField() {
-        for (var i = 0; i < ENTITY_UPDATEABLE_FIELDS.length; i++) {
+        for (int i = 0; i < ENTITY_UPDATEABLE_FIELDS.length; i++) {
             System.out.printf("%d. %s\n", i + 1, ENTITY_UPDATEABLE_FIELDS[i]);
         }
 
-        var chosenIndex = ConsoleHelper.requestInput("Choose the index of a field to update: ", x -> x >= 0 && x < ENTITY_UPDATEABLE_FIELDS.length);
+        int chosenIndex = ConsoleHelper.requestInput("Choose the index of a field to update: ", x -> x >= 0 && x < ENTITY_UPDATEABLE_FIELDS.length);
 
         return ENTITY_UPDATEABLE_FIELDS[chosenIndex];
     }
 
     protected void printEntities(List<T> entities) {
-        for (var i = 0; i < entities.size(); i++) {
+        for (int i = 0; i < entities.size(); i++) {
             System.out.printf("%d. %s\n", i + 1, entities.get(i));
         }
     }

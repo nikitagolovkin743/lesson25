@@ -31,7 +31,7 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> getCreatePreparedStatement(entity, connection), keyHolder);
 
-        var generatedKey = (long) keyHolder.getKey();
+        long generatedKey = (long) keyHolder.getKey();
         entity.setId(generatedKey);
 
         return generatedKey;
@@ -41,7 +41,7 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
 
     @Override
     public Optional<T> get(Long id) {
-        var entity = jdbcTemplate.queryForObject(getFindByIdSqlQuery(), getRowMapper(), id);
+        T entity = jdbcTemplate.queryForObject(getFindByIdSqlQuery(), getRowMapper(), id);
 
         return Optional.ofNullable(entity);
     }
