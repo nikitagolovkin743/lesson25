@@ -30,7 +30,7 @@ public class GenreCrudController extends AbstractCrudController<Genre> {
             printEntities(genres);
         }
 
-        int genreIndex = ConsoleHelper.requestInput("Enter genre index: ", x -> x >= 0 && x < genres.size());
+        int genreIndex = ConsoleHelper.requestIndexInput("Enter genre index: ", genres);
 
         return genres.get(genreIndex);
     }

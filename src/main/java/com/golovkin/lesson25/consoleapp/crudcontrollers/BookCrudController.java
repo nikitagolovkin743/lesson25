@@ -38,13 +38,13 @@ public class BookCrudController extends AbstractCrudController<Book> {
             printEntities(books);
         }
 
-        int chosenIndex = ConsoleHelper.requestInput("Enter book index: ", x -> x >= 0 && x < books.size());
+        int chosenIndex = ConsoleHelper.requestIndexInput("Enter book index: ", books);
 
         return books.get(chosenIndex);
     }
 
     public int requestPageCount() {
-        return ConsoleHelper.requestInput("Enter page count: ", x -> x >= 0 && x < MAX_PAGE_COUNT);
+        return ConsoleHelper.requestIndexInput("Enter page count: ", x -> x >= 0 && x < MAX_PAGE_COUNT);
     }
 
     @Override

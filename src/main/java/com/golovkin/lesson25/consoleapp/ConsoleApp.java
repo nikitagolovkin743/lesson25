@@ -64,7 +64,7 @@ public class ConsoleApp {
     private AbstractCrudController<? extends Identifiable> chooseEntityType(Class[] entityTypes) {
         printEntityTypes(entityTypes);
 
-        int chosenIndex = ConsoleHelper.requestInput("Choose entity: ", x -> x < entityTypes.length && x >= 0);
+        int chosenIndex = ConsoleHelper.requestIndexInput("Choose entity: ", entityTypes);
         Class chosenEntityType = entityTypes[chosenIndex];
 
         return crudControllers.get(chosenEntityType);
@@ -81,7 +81,7 @@ public class ConsoleApp {
         CrudActions[] crudActions = CrudActions.values();
         printCrudActions(crudActions);
 
-        int chosenIndex = ConsoleHelper.requestInput("Choose CRUD action: ", x -> x < crudActions.length && x >= 0);
+        int chosenIndex = ConsoleHelper.requestIndexInput("Choose CRUD action: ", crudActions);
 
         return crudActions[chosenIndex];
     }

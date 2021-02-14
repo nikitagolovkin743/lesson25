@@ -40,7 +40,7 @@ public class AuthorCrudController extends AbstractCrudController<Author> {
             printEntities(authors);
         }
 
-        int authorIndex = ConsoleHelper.requestInput("Enter author index: ", x -> x >= 0 && x < authors.size());
+        int authorIndex = ConsoleHelper.requestIndexInput("Enter author index: ", authors);
 
         return authors.get(authorIndex);
     }

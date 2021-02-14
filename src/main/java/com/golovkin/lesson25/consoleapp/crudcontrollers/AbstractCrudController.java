@@ -29,7 +29,7 @@ public abstract class AbstractCrudController<T extends Identifiable> {
         List<T> entities = dao.findAll();
         printEntities(entities);
 
-        int chosenEntityToDeleteIndex = ConsoleHelper.requestInput("Choose entity to delete:", x -> x < entities.size() && x >= 0);
+        int chosenEntityToDeleteIndex = ConsoleHelper.requestIndexInput("Choose entity to delete:", entities);
         T chosenEntityToDelete = entities.get(chosenEntityToDeleteIndex);
 
         dao.delete(chosenEntityToDelete.getId());
@@ -40,7 +40,7 @@ public abstract class AbstractCrudController<T extends Identifiable> {
             System.out.printf("%d. %s\n", i + 1, ENTITY_UPDATEABLE_FIELDS[i]);
         }
 
-        int chosenIndex = ConsoleHelper.requestInput("Choose the index of a field to update: ", x -> x >= 0 && x < ENTITY_UPDATEABLE_FIELDS.length);
+        int chosenIndex = ConsoleHelper.requestIndexInput("Choose the index of a field to update: ", ENTITY_UPDATEABLE_FIELDS);
 
         return ENTITY_UPDATEABLE_FIELDS[chosenIndex];
     }

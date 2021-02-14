@@ -1,7 +1,6 @@
 package com.golovkin.lesson25.consoleapp;
 
-import java.util.InputMismatchException;
-import java.util.Scanner;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class ConsoleHelper {
@@ -11,7 +10,7 @@ public class ConsoleHelper {
         scanner = new Scanner(System.in);
     }
 
-    public static int requestInput(String message, Predicate<Integer> successCondition) {
+    public static int requestIndexInput(String message, Predicate<Integer> successCondition) {
         int chosenIndex = -1;
         do {
             System.out.print(message);
@@ -24,6 +23,14 @@ public class ConsoleHelper {
         } while (!successCondition.test(chosenIndex));
 
         return chosenIndex;
+    }
+
+    public static <T> int requestIndexInput(String message, List<?> list) {
+        return  requestIndexInput(message, x -> x >= 0 && x < list.size());
+    }
+
+    public static <T> int requestIndexInput(String message, Object[] list) {
+        return requestIndexInput(message, Arrays.asList(list));
     }
 
     public static Scanner getScanner() {
